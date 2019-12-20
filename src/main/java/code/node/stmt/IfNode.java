@@ -4,15 +4,17 @@ import code.tokens.Token;
 import java.util.List;
 import code.node.ast.ExpressionNode;
 
-public class WhileNode extends StatementNode{
+public class IfNode extends StatementNode{
 
     public final Token token;
-    public final ExpressionNode cobdition;
+    public final ExpressionNode condition;
     public final List<StatementNode> body;
+    public ElseNode elseNode;
 
-    public WhileNode(Token token, ExpressionNode cobdition, List<StatementNode> body) {
+    public IfNode(Token token, ExpressionNode condition,  List<StatementNode> body) {
         this.token = token;
-        this.cobdition = cobdition;
+        this.condition = condition;
         this.body = body;
     }
+
 }

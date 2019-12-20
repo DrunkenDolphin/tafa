@@ -9,13 +9,15 @@ import java.util.Map;
 
 public class Application {
     public static void main(String[] args) {
-        String prog = "while x > x - 1 do\n" +
-                "  print x;\n" +
-                "  x--;\n" +
-                "  while 1 = 0 do print x; done;\n" +
-                "done;";
-        Map<String, Double> vars = new HashMap<>();
-        vars.put("x", 9.001);
+//        String prog = "while x > 0.999999999994458E-4 - 1 do\n" +
+//                "  print x;\n" +
+//                "  x--;\n" +
+//                "  while 1 = 0 do print x; done;\n" +
+//                "done;";
+        String prog = "if x < 8 then print 6;  end; if x > 8 then print 7; end;";
+        Map<String, String> vars = new HashMap<>();
+        vars.put("x", "9a");
+        vars.put("y", "6");
 
         Lexer l = new Lexer(prog);
         List<Token> tokens = l.lex();

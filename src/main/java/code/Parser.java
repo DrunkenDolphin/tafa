@@ -1,4 +1,4 @@
-package code;
+package  code;
 
 import java.util.*;
 import java.util.List;
@@ -7,6 +7,8 @@ import code.node.stmt.*;
 import java.util.Arrays;
 import code.tokens.Token;
 import code.tokens.TokenType;
+
+import static com.sun.tools.doclint.Entity.and;
 
 public class Parser {
 
@@ -52,71 +54,44 @@ public class Parser {
     }
 
     public StatementNode parseStatement() {
-        Token op = require(TokenType.WHILE, TokenType.ID, TokenType.PRINT);
+        Token op = require(TokenType.IF, TokenType.PRINT);
         switch (op.type) {
-            case ID:
-                Token token = require(TokenType.DEC, TokenType.INC);
-                ExpressionNode e = new UnOpNode(token, new VarNode(op));
-                require(TokenType.END);
-                return new VariableNode(op, e);
             case PRINT:
-                Token id = require(TokenType.ID);
-                require(TokenType.END);
-                return new PrintNode(op, new VarNode(id));
-            case WHILE:
-                ExpressionNode comp = parseCompare();
-                require(TokenType.DO);
-                List<StatementNode> body = new ArrayList<>();
-                while (match(TokenType.DONE) == null) {
-                    if ( pos < tokens.size()) {
-                        StatementNode stmt = parseStatement();
-                        body.add(stmt);
-                    } else error("Ожидался DONE");
+                Token id = require(TokenType.ID, TokenType.NUMBER);
+                require(TokenType.COMMA);
+                if(id.type==TokenType.ID) {
+                    return new PrintNode(op, new VarNode(id));
+                }else if(id.type==TokenType.NUMBER) {
+                    return new PrintNode(op, new NumberNode(id));
                 }
-                require(TokenType.END);
-                return new WhileNode(op, comp, body);
+            case IF:
+                ExpressionNode comp = parseCompare();
+                require(TokenType.THEN);
+                List<StatementNode> body = new ArrayList<>();
+                while (match(TokenType.END) == null) {
+                    if ( pos < tokens.size()) {
+                        StatementNode stmt; /*= parseElse();
+if(stmt != null) {
+body.add(stmt);
+}*/
+                        stmt = parseStatement();
+                        body.add(stmt);
+                    } else error("Ожидался END");
+                }
+                require(TokenType.COMMA);
+                return new IfNode(op, comp, body);
         }
         return null;
     }
 
     public ExpressionNode parseCompare() {
-        ExpressionNode e1 = parseExpression();
+        ExpressionNode e1 = parseElem();
         Token op;
         while ((op = match(TokenType.MORE, TokenType.LESS, TokenType.EQUAL)) != null) {
-            ExpressionNode e2 = parseExpression();
+            ExpressionNode e2 = parseElem();
             e1 = new BinOpNode(op, e1, e2);
         }
         return e1;
-    }
-
-    public ExpressionNode parseExpression() {
-        ExpressionNode e1 = parseSlag();
-        Token op;
-        while ((op = match(TokenType.ADD, TokenType.SUB)) != null) {
-            ExpressionNode e2 = parseSlag();
-            e1 = new BinOpNode(op, e1, e2);
-        }
-        return e1;
-    }
-
-    public ExpressionNode parseSlag() {
-        ExpressionNode e1 = parsePar();
-        Token op;
-        while ((op = match(TokenType.MUL, TokenType.DIV)) != null) {
-            ExpressionNode e2 = parsePar();
-            e1 = new BinOpNode(op, e1, e2);
-        }
-        return e1;
-    }
-
-    private ExpressionNode parsePar() {
-        if (match(TokenType.LPAR) != null) {
-            ExpressionNode e = parseExpression();
-            require(TokenType.RPAR);
-            return e;
-        } else {
-            return parseElem();
-        }
     }
 
     private ExpressionNode parseElem() {
@@ -128,12 +103,19 @@ public class Parser {
         if (id != null)
             return new VarNode(id);
 
-        Token unOp = match(TokenType.SUB);
-        if (unOp != null)
-            return new UnOpNode(unOp, parseExpression());
-
         error("Ожидается число или переменная");
         return null;
+    }
+
+    private ElseNode parseElse() {
+        Token num = match(TokenType.ELSE);
+        if(num != null) {
+            List<StatementNode> body = new ArrayList<>();
+            body.add(parseStatement());
+            ElseNode elseNode = new ElseNode(num, body);
+            return elseNode;
+        }
+        else return null;
     }
 
 }

@@ -3,30 +3,24 @@ package code.tokens;
 import java.util.regex.Pattern;
 
 public enum TokenType {
-    NUMBER("[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?"),
+    NUMBER("[0-9][a-f0-9]*"),
 
-    WHILE("while"),
-    DONE("done"),
-    DO("do"),
+    IF("if"),
+    THEN("then"),
+    ELSE("else"),
     PRINT("print"),
-    END(";"),
+    END("end"),
+    COMMA(";"),
 
-    ID("[a-zA-Z_][a-zA-Z_0-9]*"),
+    ID("[a-zA-Z]"),
 
-    INC("\\+\\+"),
-    DEC("--"),
+    //INC("\\+\\+"),
+    //DEC("--"),
 
     EQUAL("="),
     MORE(">"),
     LESS("<"),
 
-    ADD("\\+"),
-    SUB("-"),
-    MUL("\\*"),
-    DIV("/"),
-
-    LPAR("\\("),
-    RPAR("\\)"),
     SPACE("[ \t\r]+"),
     ENDL("\n");
 
