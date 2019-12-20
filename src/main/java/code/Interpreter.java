@@ -5,8 +5,6 @@ import code.node.stmt.ElseNode;
 import code.node.stmt.PrintNode;
 import code.node.stmt.StatementNode;
 import code.node.stmt.IfNode;
-import code.tokens.Token;
-import code.tokens.TokenType;
 
 import java.util.List;
 import java.util.Map;
@@ -38,7 +36,7 @@ public class Interpreter {
                         evalStatement(s, vars);
                     }
                 } catch (NullPointerException e) {
-                    e.printStackTrace();
+//                    e.printStackTrace();
                     return;
                 }
             }

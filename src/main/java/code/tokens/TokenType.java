@@ -3,6 +3,8 @@ package code.tokens;
 import java.util.regex.Pattern;
 
 public enum TokenType {
+
+
     NUMBER("[0-9][a-f0-9]*"),
 
     IF("if"),
