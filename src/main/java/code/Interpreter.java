@@ -33,13 +33,9 @@ public class Interpreter {
                     break;
                 }
             } else {
-                try {
-                    for (StatementNode s : ((IfNode) stmt).elseNode.body) {
-                        evalStatement(s, vars);
-                    }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                    return;
+                if (((IfNode) stmt).elseNode == null) return;
+                for (StatementNode s : ((IfNode) stmt).elseNode.body) {
+                    evalStatement(s, vars);
                 }
             }
         }
