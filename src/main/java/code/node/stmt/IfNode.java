@@ -11,10 +11,11 @@ public class IfNode extends StatementNode{
     public final List<StatementNode> body;
     public ElseNode elseNode;
 
-    public IfNode(Token token, ExpressionNode condition,  List<StatementNode> body) {
+    public IfNode(Token token, ExpressionNode condition,  List<StatementNode> body, ElseNode elseNode) {
         this.token = token;
         this.condition = condition;
         this.body = body;
+        this.elseNode = elseNode;
     }
 
 }

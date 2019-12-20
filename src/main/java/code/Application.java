@@ -15,6 +15,7 @@ public class Application {
 //                "  while 1 = 0 do print x; done;\n" +
 //                "done;";
         String prog = "if x < 8 then print 6;  end; if x > 8 then print 7; end;";
+        //String prog = "if x < 1 then print 6; else print 5; end;";
         Map<String, String> vars = new HashMap<>();
         vars.put("x", "9a");
         vars.put("y", "6");
@@ -31,12 +32,3 @@ public class Application {
         i.evalProgram(stmts, vars);
     }
 }
-
-/*
-while x > 0 do
-  print x;
-  x--;
-  while 1 = 0 do print x; done;
-done;
-
-*/
