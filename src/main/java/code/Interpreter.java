@@ -25,13 +25,27 @@ public class Interpreter {
 
     private void evalStatement( StatementNode stmt, Map<String, String> vars) {
         if (stmt instanceof IfNode) {
-            while(evalCompare(((IfNode) stmt).condition, vars)) {
-                for ( StatementNode s: ((IfNode) stmt).body) {
-                    evalStatement(s, vars);
+            if (evalCompare(((IfNode) stmt).condition, vars)) {
+                while (evalCompare(((IfNode) stmt).condition, vars)) {
+                    for (StatementNode s : ((IfNode) stmt).body) {
+                        evalStatement(s, vars);
+                    }
+                    break;
                 }
-                break;
+            } else {
+                try {
+                    for (StatementNode s : ((IfNode) stmt).elseNode.body) {
+                        evalStatement(s, vars);
+                    }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                    return;
+                }
             }
-
+        }
+        if (stmt instanceof PrintNode) {
+            System.out.println(evalExpression(((PrintNode) stmt).body, vars));
+        }
 // for(StatementNode statementNode : ((IfNode)stmt).body) {
 // if(statementNode instanceof IfNode) {
 // if(!evalCompare(((IfNode)statementNode).condition,vars)) {
@@ -42,11 +56,6 @@ public class Interpreter {
 // }
 // evalStatement(statementNode, vars);
 // }
-        }
-
-        if (stmt instanceof PrintNode) {
-            System.out.println(evalExpression(((PrintNode) stmt).body, vars));
-        }
     }
 
     private boolean evalCompare( ExpressionNode comp, Map<String, String> vars) {

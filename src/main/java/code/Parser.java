@@ -8,7 +8,6 @@ import java.util.Arrays;
 import code.tokens.Token;
 import code.tokens.TokenType;
 
-import static com.sun.tools.doclint.Entity.and;
 
 public class Parser {
 
@@ -59,27 +58,35 @@ public class Parser {
             case PRINT:
                 Token id = require(TokenType.ID, TokenType.NUMBER);
                 require(TokenType.COMMA);
-                if(id.type==TokenType.ID) {
+                if (id.type==TokenType.ID) {
                     return new PrintNode(op, new VarNode(id));
-                }else if(id.type==TokenType.NUMBER) {
+                } else if (id.type==TokenType.NUMBER) {
                     return new PrintNode(op, new NumberNode(id));
                 }
             case IF:
                 ExpressionNode comp = parseCompare();
                 require(TokenType.THEN);
                 List<StatementNode> body = new ArrayList<>();
+                List<StatementNode> elseBody = new ArrayList<>();
+                ElseNode elseNode = null;
                 while (match(TokenType.END) == null) {
                     if ( pos < tokens.size()) {
-                        StatementNode stmt; /*= parseElse();
-if(stmt != null) {
-body.add(stmt);
-}*/
+                        StatementNode stmt;
+                        Token mElse = match(TokenType.ELSE);
+                        if(mElse != null) {
+                            while (match(TokenType.END) == null) {
+                                if (pos < tokens.size()) elseBody.add(parseStatement());
+                                else error("WHERE MY END?");
+                            }
+                            elseNode = new ElseNode(mElse, elseBody);
+                            break;
+                        }
                         stmt = parseStatement();
                         body.add(stmt);
                     } else error("Ожидался END");
                 }
                 require(TokenType.COMMA);
-                return new IfNode(op, comp, body);
+                return new IfNode(op, comp, body, elseNode);
         }
         return null;
     }
