@@ -14,7 +14,7 @@ public class Application {
 //                "  x--;\n" +
 //                "  while 1 = 0 do print x; done;\n" +
 //                "done;";
-        String prog = "if x < 8 then print 6;  end; if x > 8 then print 7; end;";
+        String prog = "if x < 1 then print 6;  else print 4; end; if x > 8 then print 7; end;";
         //String prog = "if x < 1 then print 6; else print 5; end;";
         Map<String, String> vars = new HashMap<>();
         vars.put("x", "9a");
